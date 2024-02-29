@@ -1,4 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for
+from src.auth import login#, signup 
+
 
 app = Flask(__name__)
 
@@ -12,13 +14,13 @@ def home():
 def signin():
   error = None
   if request.method == "POST":
-    email = request.form.get("email")
+    email = request.form.get("username")
     password = request.form.get("password")
-    authenticated = True
+    authenticated = login(email,password)
     if authenticated:
       return redirect(url_for('home'))
     else:
-      error = "Invalid"
+      error = "Incorrect email or password"
   return render_template('signin.html', error=error)
 
 

@@ -3,7 +3,7 @@ from typing import List, Union
 
 
 def create_connection():
-  return sqlite3.connect("ecommerce.db")
+  return sqlite3.connect("./db/ecommerce.db")
 
 
 def run_query(query, values=None):
@@ -36,10 +36,12 @@ def get_user_by_username(username: str) -> Union[List, None]:
     *
   FROM 
     user
-  WHERE name = (?)
+  WHERE 
+    name = (?)
   """
   values = (username, )
   users = run_query(query, values)
+  #print(f"From queries: {users}")
   if users is None: return None
   if len(users) == 0: return None
   return users[0]
