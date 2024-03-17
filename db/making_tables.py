@@ -8,7 +8,6 @@ def hash_password(raw_password):
   h = hashlib.sha256()
   h.update(raw_password)
   res = h.hexdigest()
-  print(res)
   return res 
 
 
