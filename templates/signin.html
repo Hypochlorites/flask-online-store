@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div> 
+  <h1>Sign In</h1>
+  {% if error %}
+      <p><strong>Error:{{ error }}</strong></p>
+  {% endif %}
+
+  <form method="post">
+    <div>
+      <input 
+          type="text"
+          name="username"
+          value=""
+          placeholder="enter your username"
+      />
+    </div>
+    <div>
+      <input 
+          type="password"
+          name="password"
+          value=""
+          placeholder="enter your password"
+      />
+    </div>
+    <button type="submit">Sign In</button>
+  </form>
+  <div> No account? <a href="/signup"> signup </a></div>
+</div>
+{% endblock %}

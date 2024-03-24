@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div>
+  <h1>Welcome</h1>
+  <div>
+      {% if context.error %}
+        <p>An error occured: {{ context.error }}</p>
+      {% elif context.products %}
+          {% if 'username' in session%}
+            <p>Hello, {{session['username']}}</p>
+          {% else %}
+            <p> Not signed in</p>
+          {% endif %}
+          {% for product in context.products %}
+            <div class="product" style="padding:0.5rem; display: flex; justify-content: space-between; align-items: center;max-width:20rem">
+              <div>
+                  <p>{{ product[1] }}</p>
+                  <p>${{ product[2] }}</p> 
+              </div>
+              <div>
+                <form method="post" action="/add-to-cart">
+                  <input type="hidden" name="product_id" value="{{ product[0] }}"> </input>
+                  <button>Purchase</button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+      {% else %}
+        <p> No products available </p>
+      {% endif %}
+  </div>
+</div>
+{% endblock %}
