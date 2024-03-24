@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In</title>
-</head>
-  
-<body>
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div> 
   <h1>Sign In</h1>
   {% if error %}
       <p><strong>Error:{{ error }}</strong></p>
   {% endif %}
+
   <form method="post">
     <div>
       <input 
@@ -30,5 +28,6 @@
     </div>
     <button type="submit">Sign In</button>
   </form>
-</body>
-</html>
+  <div> No account? <a href="/signup"> signup </a></div>
+</div>
+{% endblock %}

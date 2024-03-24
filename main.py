@@ -16,7 +16,6 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 @app.route('/')
 def home():
-  print(session)
   try:
     products = get_products()
     context = {
@@ -40,14 +39,14 @@ def home():
 def signin_route():
   error = None
   if request.method == "POST":
-    email = request.form.get("username")
+    username = request.form.get("username")
     password = request.form.get("password")
-    authenticated = login(email,password)
+    authenticated = login(username,password)
     if authenticated:
-      session['email'] = email
+      session['username'] = username
       return redirect(url_for('home'))
     else:
-      error = "Incorrect email or password"
+      error = "Incorrect username or password"
   return render_template('signin.html', error=error)
 
 
@@ -55,18 +54,16 @@ def signin_route():
 def signup_route():
   error = None
   if request.method == "POST":
-    email = request.form.get("username")
+    username = request.form.get("username")
     password = request.form.get("password")
     confirm_password = request.form.get("confirm-password")
-    print(password)
-    print(confirm_password)
     
     if password != confirm_password:
       error = "Passwords do not match"
       return render_template('signup.html', error=error)
 
     try: 
-      signup(email, password)
+      signup(username, password)
     except Exception as e:
       error = e
       return render_template('signup.html', error=error)
@@ -77,8 +74,16 @@ def signup_route():
   
   return render_template('signup.html', error=error)
 
+@app.route("/signout")
+def signout():
+  session.clear()
 
+  return redirect(url_for('home'))
 
+@app.route("/add-to-cart", methods=["GET", "POST"])
+def add_to_cart():
+  product_id = request.form.get("product_id")
+  return redirect(url_for('home'))
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=80)

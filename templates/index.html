@@ -1,19 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Homepage</title>
-</head>
-<body>
-	<h1>Welcome</h1>
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
 
+{% block content %}
+
+<div>
+  <h1>Welcome</h1>
   <div>
       {% if context.error %}
         <p>An error occured: {{ context.error }}</p>
       {% elif context.products %}
-          {% if 'email' in session%}
-            <p>Hello, {{session['email']}}</p>
+          {% if 'username' in session%}
+            <p>Hello, {{session['username']}}</p>
           {% else %}
             <p> Not signed in</p>
           {% endif %}
@@ -24,7 +21,10 @@
                   <p>${{ product[2] }}</p> 
               </div>
               <div>
-                  <buttton>Purchase</buttton>
+                <form method="post" action="/add-to-cart">
+                  <input type="hidden" name="product_id" value="{{ product[0] }}"> </input>
+                  <button>Purchase</button>
+                </form>
               </div>
             </div>
           {% endfor %}
@@ -32,5 +32,5 @@
         <p> No products available </p>
       {% endif %}
   </div>
-</body>
-</html>
+</div>
+{% endblock %}
