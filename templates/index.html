@@ -27,10 +27,34 @@
                 </form>
               </div>
             </div>
+    
+           
           {% endfor %}
       {% else %}
         <p> No products available </p>
       {% endif %}
+      <div id="popupMessage">
+        {% with message = get_flashed_messages() | first %}
+            {% if message %}
+                <p style="color: green">
+                {{ message }}
+                </p>
+            {% endif %}
+        {% endwith %}
+      </div>
   </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const popupMessage = document.getElementById('popupMessage');
+    if (popupMessage.innerHTML.trim() !== '') {
+      popupMessage.style.opacity = '1';
+    setTimeout(() => {
+        popupMessage.style.opacity = '0';
+    }, 2000)
+    };
+
+    })
+</script>
 {% endblock %}

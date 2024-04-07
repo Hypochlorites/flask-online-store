@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template, redirect, url_for, session 
+from flask import Flask, request, render_template, redirect, url_for, session, flash 
 
 from src.auth import login, signup 
 from src.queries import get_products
@@ -83,7 +83,14 @@ def signout():
 @app.route("/add-to-cart", methods=["GET", "POST"])
 def add_to_cart():
   product_id = request.form.get("product_id")
+
+  cart = session.get('cart',{})
+  cart[product_id] = cart.get(product_id, 0) + 1
+  session['cart'] = cart
+  flash("Added to Cart", "success")
+  print(f"flash: {flash}")
   return redirect(url_for('home'))
+
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=80)
