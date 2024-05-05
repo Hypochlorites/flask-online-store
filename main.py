@@ -16,20 +16,17 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 @app.route('/')
 def home():
+  context = {
+      'products': None,
+      'session' : session,
+      'error': None
+  } 
   try:
     products = get_products()
-    context = {
-        'user': "Temporary",
-        'products': products,
-        'session' : session,
-        'error': None
-    } 
+    context['products'] = products
   except Exception as e:
-    context = {
-        'user': "temporary",
-        'products': None,
-        'error': e
-    }
+    context['error'] = e
+    
   
   
   return render_template('index.html', context=context)
@@ -80,16 +77,69 @@ def signout():
 
   return redirect(url_for('home'))
 
-@app.route("/add-to-cart", methods=["GET", "POST"])
+@app.route("/cart/add", methods=["GET", "POST"])
 def add_to_cart():
+
+ 
   product_id = request.form.get("product_id")
 
+  
+  # print(f"product: {product_id}")
+  # print(f"intial: {session.get('cart')}")
+  
   cart = session.get('cart',{})
   cart[product_id] = cart.get(product_id, 0) + 1
   session['cart'] = cart
+  print(f"after: {session['cart']}")
   flash("Added to Cart", "success")
-  print(f"flash: {flash}")
   return redirect(url_for('home'))
+
+@app.route("/cart", methods=["GET", "POST"])
+def cart():
+  if request.method == "POST":
+      pass
+
+  context = {
+      'products': None, 
+      'session': session,
+      'error': None,
+  }
+
+  try:
+      products = get_products()
+      cart = session.get('cart')
+      if cart is None:
+          context['products'] = []
+      else:
+          product_ids_in_cart = cart.keys()
+          # print(f"product_ids_in_cart: {product_ids_in_cart} ")
+          # print(f"before filter: {products}")
+          products = list(filter(lambda x: str(x[0]) in product_ids_in_cart, products))
+          products = [ (*product, cart[str(product[0])] ) for product in products ]
+          context['products'] = products 
+          
+  except Exception as e:
+      context['error'] = e
+
+  
+  return render_template('cart.html', context=context)
+
+@app.route("/cart/update-quantity", methods=["POST"])
+def update_quantity():
+    product_id = request.form.get("product_id")
+    quantity = request.form.get("quantity")
+    cart = session.get('cart', {})
+
+    try: 
+      if quantity == "0":
+          cart.pop(product_id)
+      else:
+          cart[product_id] = quantity
+    except Exception as e:
+        print(e)
+  
+    session['cart'] = cart
+    return redirect(url_for('cart'))
 
 
 if __name__ == '__main__':

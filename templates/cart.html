@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Your cart{% endblock %}
+
+{% block content %}
+
+<div>
+  <h1>Items in cart: </h1>
+
+  {% if error %}
+      <p><strong>Error: </strong> {{ error }}</p>
+  {% endif %}
+
+  <div>
+      <ul>
+          {% for item in context.products %}
+              <li style="list-stye:none; display:flex; justify-content:space-between">
+                  <h1>{{ item[1] }}</h1>
+                <div style="display:flex; align-items:center">  
+                  <form method="post" action="/cart/update-quantity">
+                        <input type="hidden" name="product_id" value="{{ item[0] }}"/>
+                        <input type="hidden" name="quantity" value="{{ item[-1] | int - 1 }}"/>
+                        <button type="submit">-</button> 
+                    </form>
+                    <h1>{{ item[-1] }}</h1>
+                    <form method="post" action="/cart/update-quantity">
+                        <input type="hidden" name="product_id" value="{{ item[0] }}"/>
+                        <input type="hidden" name="quantity" value="{{ item[-1] | int + 1 }}"/>
+                        <button type="submit">+</button> 
+                    </form>
+                  </div>
+              </li>
+              
+          {% endfor %}
+        
+      </ul>
+  </div>
+</div>
+    
+{% endblock %}

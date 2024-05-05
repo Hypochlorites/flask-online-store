@@ -4,15 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %} {% endblock %} </title>
+  <style>
+      body {
+        font-family: 'Verdana', fallback-font, generic-font; 
+      }
+  </style>
 </head>
 <body>
   <nav>
     <ul>
       <a href="/"> home </a>
-      <a href="/signin"> signin </a>
-      <form action="{{ url_for('signout') }}" method="GET">
-        <button> signout </button>
-      </form>
+      {% if 'username' not in session %}
+        <a href="/signin"> signin </a>
+      {% endif %}
+      <a href="/cart"> cart </a>
+
+      {% if 'username' in session%}
+        <form action="{{ url_for('signout') }}" method="GET">
+          <button> signout </button>
+        </form>
+      {% endif %}
     </ul>
   </nav>
   {% block content %}
