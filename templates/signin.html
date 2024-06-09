@@ -5,7 +5,7 @@
 
 <div> 
   <h1>Sign In</h1>
-  {% if error %}
+  {% if context.error is not none %}
       <p><strong>Error:{{ error }}</strong></p>
   {% endif %}
 

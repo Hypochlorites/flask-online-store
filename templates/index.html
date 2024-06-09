@@ -6,7 +6,7 @@
 <div>
   <h1>Welcome</h1>
   <div>
-      {% if context.error %}
+      {% if context.error is not none %}
         <p>An error occured: {{ context.error }}</p>
       {% elif context.products %}
           {% if 'username' in session%}

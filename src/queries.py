@@ -1,6 +1,6 @@
 import sqlite3
 from typing import List, Union
-
+from datetime import datetime
 
 def create_connection():
   return sqlite3.connect("./db/ecommerce.db")
@@ -64,12 +64,13 @@ def get_user_by_id(id: int) -> Union[List, None]:
 
 
 def update_cash(id: int, cash: float):
-
+  
   query = """
   UPDATE user
   SET cash = (?)
   WHERE id = (?)
   """
+  
   values = (round(cash, 2), id)
   run_query(query, values)
 
@@ -129,14 +130,18 @@ def get_products() -> list:
   return products
 
 
-def place_order(user_id, product_id, timestamp):
+def place_order(user_id, product_id):
   query = """
   INSERT INTO orders(user_id, product_id, timestamp) 
   VALUES(?, ?, ?)
   """
+  timestamp = datetime.now()
   values = (user_id, product_id, timestamp)
-  run_query(query, values)
-
+  try:
+    run_query(query, values)
+  except sqlite3.Error as e:
+    print(f"An error occured while running 'place order' query: {e}")
+    raise e 
 
 def remove_order(order_id: int):
   query = """

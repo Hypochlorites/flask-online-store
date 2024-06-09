@@ -4,9 +4,14 @@
 {% block content %}
 
 <div>
-  <h1>Items in cart: </h1>
+  {% if not context.products %}
+    <h1> Nothing in cart </h1>
+  {% else %}
+    <h1>Items in cart: </h1>
+  {% endif %}  
 
-  {% if error %}
+    
+  {% if context["error"] %}
       <p><strong>Error: </strong> {{ error }}</p>
   {% endif %}
 
@@ -14,25 +19,43 @@
       <ul>
           {% for item in context.products %}
               <li style="list-stye:none; display:flex; justify-content:space-between">
-                  <h1>{{ item[1] }}</h1>
-                <div style="display:flex; align-items:center">  
-                  <form method="post" action="/cart/update-quantity">
-                        <input type="hidden" name="product_id" value="{{ item[0] }}"/>
-                        <input type="hidden" name="quantity" value="{{ item[-1] | int - 1 }}"/>
-                        <button type="submit">-</button> 
-                    </form>
-                    <h1>{{ item[-1] }}</h1>
-                    <form method="post" action="/cart/update-quantity">
-                        <input type="hidden" name="product_id" value="{{ item[0] }}"/>
-                        <input type="hidden" name="quantity" value="{{ item[-1] | int + 1 }}"/>
-                        <button type="submit">+</button> 
-                    </form>
+                  <h1 style="font-weight:500;">{{ item[1] }}</h1>
+                  <div style="display:flex; align-items:center">  
+                      <div style="margin-right:2rem;">
+                            <h2>${{item[2]}}</h2>
+                      </div>
+                      <form method="post" action="/cart/update-quantity">
+                            <input type="hidden" name="product_id" value="{{ item[0] }}"/>
+                            <input type="hidden" name="quantity" value="{{ item[-1] | int - 1 }}"/>
+                            <button type="submit">-</button> 
+                        </form>
+                        <h2 style="padding:0.5rem; font-weight:500;">{{ item[-1] }}</h2>
+                        <form method="post" action="/cart/update-quantity">
+                            <input type="hidden" name="product_id" value="{{ item[0] }}"/>
+                            <input type="hidden" name="quantity" value="{{ item[-1] | int + 1 }}"/>
+                            <button type="submit">+</button> 
+                        </form>
                   </div>
               </li>
               
           {% endfor %}
         
       </ul>
+      <div style="display:flex; justify-content:end">
+          <div style="display: flex; flex-direction:column; align-items:center">
+              <div style="display:flex;"">
+                  <h2 style="margin-right:2rem;">Subtotal:</h2>
+                  <h2 style="font-weight:500;">${{context.subtotal}}</h2>
+              </div>
+              <form action="/checkout">
+                  <input 
+                      style="padding: .5rem 2rem;"
+                      type="submit"
+                      value="Checkout"
+                    />
+              </form>
+          </div>
+      </div>
   </div>
 </div>
     
